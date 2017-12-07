@@ -67,19 +67,23 @@
 															+"</h3>";
 								//Debug...									
 								//alert(displayValue);
-								$("h3").remove();
+								//$("h3").remove();
 								$( "#"+userId+"" ).html(displayValue);
 							}
 					});
 				
-			});
+			}, function() {
+				$("h3").remove();
+			  }
 			
-			$( ".ct_list_pop td:nth-child(3).fade" ).hover(function() {
+			);
+			
+			/* $( ".ct_list_pop td:nth-child(3).fade" ).hover(function() {
 				  $( this ).fadeOut( 100 );
 				  $( this ).fadeIn( 500 );
 				  //$( this ).remove();
 				  
-			});
+			}); */
 			
 			//==> userId LINK Event End User 에게 보일수 있도록 
 			$( ".ct_list_pop td:nth-child(3)" ).css("color" , "red");

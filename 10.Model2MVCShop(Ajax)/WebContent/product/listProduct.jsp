@@ -123,7 +123,7 @@ $(function() {
 			});  */
 			
 			
-		 $( ".ct_list_pop td:nth-child(9)" ).hover(function() {
+		 $( ".ct_list_pop td:nth-child(9)" ).hover(function() { 
 			var prodNo = $($('input:hidden[name="prodNo"]')[$(".ct_list_pop td:nth-child(9)").index(this)]).val();
 			var fileName = $($('input:hidden[name="fileName"]')[$(".ct_list_pop td:nth-child(9)").index(this)]).val();
 				  $.ajax( 
@@ -136,24 +136,22 @@ $(function() {
 								"Content-Type" : "application/json"
 							},
 							success : function(JSONData , status) {
-								var displayValue = "<h2><img src=/images/uploadFiles/"+JSONData.fileName+"/></h2>";
+								var displayValue = "<img class=hover src=/images/uploadFiles/"+JSONData.fileName+"/>";
 							
-								$("h2").remove();
-								//alert(displayValue);
-								$("."+prodNo+"").html(displayValue);
-								//$( "#"+prodNo+"" ).html(displayValue);
-								//alert($(".ct_list_pop td:nth-child(9)").index(this));
+								//$(".hover").remove();
+								$("."+prodNo+"").append($("."+prodNo+"").html(displayValue));
 							}
 					});
 	
-		});	
+		}, function() {
+			$(".hover").remove();
+		  }
+		 );	
 			
-		 $( ".ct_list_pop td:nth-child(9).fade" ).hover(function() {
+		 /* $( ".ct_list_pop td:nth-child(9).fade" ).hover(function() {
 			  $( this ).fadeOut( 100 );
 			  $( this ).fadeIn( 500 );
-			  //$( this ).remove();
-			  
-		});
+		}); */
 			
 				
 });

@@ -1,5 +1,6 @@
 package com.model2.mvc.web.purchase;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -7,14 +8,19 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
+import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.domain.Purchase;
 import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.product.ProductService;
@@ -58,12 +64,57 @@ public class PurchaseRestController {
 	
 	
 	
+	@RequestMapping(value="json/addPurchase/{prodNo}", method=RequestMethod.GET)
+	public Map addPurchase( @PathVariable String prodNo, @PathVariable String userId  ) throws Exception {
+		
+		System.out.println("json/purchase/addPurchase : GET");
+		
+		Product productVO = productService.getProduct(Integer.parseInt(prodNo));
+		User userVO = userService.getUser(userId);
+		
+		Map map = new HashMap();
+		map.put("productVO", productVO);
+		map.put("userVO", userVO);
+		
+		return map;
+	}
+	
+	
+	@RequestMapping(value="json/addPurchase", method=RequestMethod.POST)
+	public Purchase addPurchase( @RequestBody Purchase purchaseVO, @PathVariable String prodNo, @PathVariable String userId  ) throws Exception {
+		
+		System.out.println("json/purchase/addPurchase : POST");
+		
+		purchaseService.addPurchase(purchaseVO);
+		
+		return purchaseVO;
+	}
+	
 	@RequestMapping(value="json/getPurchase/{tranNo}")
-	public Purchase getPurchase( @ModelAttribute("purchase") Purchase purchaseVO, @PathVariable("tranNo") String tranNo  ) throws Exception {
+	public Purchase getPurchase( @RequestBody Purchase purchaseVO, @PathVariable String tranNo  ) throws Exception {
 		
 		System.out.println("json/purchase/getPurchase : GET / POST");
 		
 		return purchaseService.getPurchase(Integer.parseInt(tranNo));
+	}
+	
+	
+	@RequestMapping(value="json/updatePurchase/{tranNo}", method=RequestMethod.GET)
+	public Purchase updatePurchase( @PathVariable String tranNo ) throws Exception{
+
+		System.out.println("json/purchase/updatePurchase : GET");
+	
+		return  purchaseService.getPurchase(Integer.parseInt(tranNo));
+	}
+	
+	@RequestMapping(value="json/updatePurchase", method=RequestMethod.POST)
+	public Purchase updatePurchase( @RequestBody Purchase purchase ) throws Exception{
+
+		System.out.println("json/purchase/updatePurchase : POST");
+		
+		purchaseService.updatePurchase(purchase);
+
+		return  purchase;
 	}
 	
 	@RequestMapping(value="json/listPurchase")
@@ -83,6 +134,47 @@ public class PurchaseRestController {
 		map.put("search", search);
 		
 		return map;
+	}
+	
+	@RequestMapping(value="json/deletePurchase/{tranNo}", method=RequestMethod.GET )
+	public Purchase deletePurchase( @PathVariable String tranNo ) throws Exception{
+
+		System.out.println("json/purchase/deletePurchase : GET");
+		
+		//Business Logic
+		Purchase purchaseVO = purchaseService.getPurchase(Integer.parseInt(tranNo));
+		purchaseService.deleteTranCode(purchaseVO);
+		
+		//model.addAttribute("purchaseVO", purchaseVO);
+		purchaseVO = purchaseService.getPurchase(Integer.parseInt(tranNo));
+		return purchaseVO;
+	}
+	
+	@RequestMapping(value="json/updateTranCode/{tranNo}",  method=RequestMethod.GET)
+	public Purchase updateTranCodeAction( @PathVariable String tranNo,Model model ) throws Exception{
+
+		System.out.println("json/purchase/updateTranCode : GET");
+		
+		//Business Logic
+		Purchase purchaseVO = purchaseService.getPurchase(Integer.parseInt(tranNo));
+		purchaseService.updateTranCode(purchaseVO);
+		//model.addAttribute("purchaseVO", purchaseVO);
+		purchaseVO = purchaseService.getPurchase(Integer.parseInt(tranNo));
+		
+		return purchaseVO;
+	}
+	
+	@RequestMapping(value="json/updateTranCodeByProd/{prodNo}", method=RequestMethod.GET)
+	public Purchase updateTranCodeByProdAction( @PathVariable String prodNo) throws Exception{
+
+		System.out.println("json/purchase/updateTranCodeByProd");
+		
+		//Business Logic
+		Purchase purchaseVO = purchaseService.getPurchase2(Integer.parseInt(prodNo));
+		purchaseService.updateTranCode(purchaseVO);
+		purchaseVO = purchaseService.getPurchase2(Integer.parseInt(prodNo));
+		
+		return purchaseVO;
 	}
 	
 }

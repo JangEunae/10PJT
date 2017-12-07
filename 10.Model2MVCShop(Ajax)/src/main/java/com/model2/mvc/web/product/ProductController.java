@@ -181,11 +181,14 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="updateProduct", method=RequestMethod.POST)
-	public String updateProduct( @ModelAttribute("product") Product product, Model model ) throws Exception{
+	public String updateProduct( @ModelAttribute("product") Product product, @RequestParam("multi") MultipartFile multi, Model model ) throws Exception{
 
 		System.out.println("/product/updateProduct : POST");
 		
-		//Business Logic
+		File f = new File("C:\\Users\\bitcamp\\git\\10PJT\\10.Model2MVCShop(Ajax)\\WebContent\\images\\uploadFiles\\"+multi.getOriginalFilename());
+		multi.transferTo(f);
+
+		product.setFileName(multi.getOriginalFilename());
 		productService.updateProduct(product);
 		
 		model.addAttribute("productVO", product);

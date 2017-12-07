@@ -87,7 +87,7 @@ public class PurchaseController {
 	}
 	
 	@RequestMapping(value="addPurchase", method=RequestMethod.POST)
-	public ModelAndView addProduct( @ModelAttribute("purchase") Purchase purchaseVO , @RequestParam("userId") String userId ,@RequestParam("prodNo") String prodNo ) throws Exception {
+	public ModelAndView addPurchase( @ModelAttribute("purchase") Purchase purchaseVO , @RequestParam("userId") String userId ,@RequestParam("prodNo") String prodNo ) throws Exception {
 
 		System.out.println("/purchase/addPurchase : POST");
 		//Business Logic
