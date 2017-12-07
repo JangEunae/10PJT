@@ -38,45 +38,47 @@
 			//==> userId LINK Event 연결처리
 			//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
 			//==> 3 과 1 방법 조합 : $(".className tagName:filter함수") 사용함.
-			$( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
-					//Debug..
-					//alert(  $( this ).text().trim() );
-					
-					//////////////////////////// 추가 , 변경된 부분 ///////////////////////////////////
-					//self.location ="/user/getUser?userId="+$(this).text().trim();
-					////////////////////////////////////////////////////////////////////////////////////////////
-					var userId = $(this).text().trim();
-					$.ajax( 
-							{
-								url : "/user/json/getUser/"+userId ,
-								method : "GET" ,
-								dataType : "json" ,
-								headers : {
-									"Accept" : "application/json",
-									"Content-Type" : "application/json"
-								},
-								success : function(JSONData , status) {
+			
+			$( ".ct_list_pop td:nth-child(3)" ).hover(function() {
+				var userId = $(this).text().trim();
+			
+				  $.ajax( 
+						{
+							url : "/user/json/getUser/"+userId ,
+							method : "GET" ,
+							dataType : "json" ,
+							headers : {
+								"Accept" : "application/json",
+								"Content-Type" : "application/json"
+							},
+							success : function(JSONData , status) {
 
-									//Debug...
-									alert(status);
-									//Debug...
-									alert("JSONData : \n"+JSONData);
-									
-									var displayValue = "<h3>"
-																+"아이디 : "+JSONData.userId+"<br/>"
-																+"이  름 : "+JSONData.userName+"<br/>"
-																+"이메일 : "+JSONData.email+"<br/>"
-																+"ROLE : "+JSONData.role+"<br/>"
-																+"등록일 : "+JSONData.regDate+"<br/>"
-																+"</h3>";
-									//Debug...									
-									//alert(displayValue);
-									$("h3").remove();
-									$( "#"+userId+"" ).html(displayValue);
-								}
-						});
-						////////////////////////////////////////////////////////////////////////////////////////////
-					
+								//Debug...
+								//alert(status);
+								//Debug...
+								//alert("JSONData : \n"+JSONData);
+								
+								var displayValue = "<h3>"
+															+"아이디 : "+JSONData.userId+"<br/>"
+															+"이  름 : "+JSONData.userName+"<br/>"
+															+"이메일 : "+JSONData.email+"<br/>"
+															+"ROLE : "+JSONData.role+"<br/>"
+															+"등록일 : "+JSONData.regDate+"<br/>"
+															+"</h3>";
+								//Debug...									
+								//alert(displayValue);
+								$("h3").remove();
+								$( "#"+userId+"" ).html(displayValue);
+							}
+					});
+				
+			});
+			
+			$( ".ct_list_pop td:nth-child(3).fade" ).hover(function() {
+				  $( this ).fadeOut( 100 );
+				  $( this ).fadeIn( 500 );
+				  //$( this ).remove();
+				  
 			});
 			
 			//==> userId LINK Event End User 에게 보일수 있도록 

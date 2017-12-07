@@ -33,7 +33,6 @@ public class UserRestController {
 	public User getUser( @PathVariable String userId ) throws Exception{
 		
 		System.out.println("/user/json/getUser : GET");
-		
 		//Business Logic
 		return userService.getUser(userId);
 	}

@@ -31,6 +31,11 @@
 	<mvc:annotation-driven />
 	
 	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="100000000"/>
+        <property name="maxInMemorySize" value="100000000"/>
+    </bean>
+	
 	<!-- ■ Annotation 기반의 모든 기능을 사용 할 수 있는 설정
 	          <mvc:annotation-driven /> 사용으로 interceptor 를 직접
 	          DefaultAnnotationHandlerMapping 에 주입 할 수 없으니 
@@ -82,5 +87,33 @@
 		<property name="defaultErrorView"	value="/common/error.jsp" />
 		
 	</bean>
+	
+	
+	<bean id="jsonConverter"	class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+		<property name="supportedMediaTypes" value="application/json" />
+	</bean>
+	
+	 <!-- /////// AnnotationMethodHandlerAdapter 에 jsonConverer  DI /////// -->
+	 <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jsonConverter" /> 
+			</list>
+		</property>	 
+	 </bean>
+
+
+	 <!-- /////// Client 로 전달되는 Domain Object  를 JSON Data  변환위한 설정            /////// -->
+	 <!-- Client  Response 받기원핟는 Content 타입을 선택,협상(Negotiation)하는 ViewResolver 설정 --> 
+	 <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+
+         <property name="defaultContentType" value="text/html"/>
+
+         <property name="defaultViews">
+             <list>
+                 <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView"/>
+             </list>
+         </property>
+     </bean>
 	
 </beans>

@@ -40,25 +40,26 @@ function fncGetList(currentPage) {
    	$("form").attr("method" , "POST").attr("action" , "/product/listProduct?menu=${param.menu}&searchOption=${search.searchOption}").submit();
 }
 
-	$(function() {
+$(function() {
 	 
 		 $( "td.ct_btn01:contains('검색')" ).on("click" , function() {
 			fncGetList(1);
 		 });
+		 
 		
-		$( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
-			if(${param.menu=='manage'}){
-				self.location = "/product/updateProduct?prodNo="+$($('input:hidden[name="prodNo"]')[$(".ct_list_pop td:nth-child(3)").index(this)]).val()+"&menu=${param.menu}";
-			}
-			else if(${param.menu=='search'}){
-				if($($('input[name="proTranCode"]')[$(".ct_list_pop td:nth-child(3)").index(this)]).val()==''){
-					self.location = "/product/getProduct?prodNo="+$($('input:hidden[name="prodNo"]')[$(".ct_list_pop td:nth-child(3)").index(this)]).val()+"&menu=${param.menu}";
-					}else {
+		 $( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
+				if(${param.menu=='manage'}){
+					self.location = "/product/updateProduct?prodNo="+$($('input:hidden[name="prodNo"]')[$(".ct_list_pop td:nth-child(3)").index(this)]).val()+"&menu=${param.menu}";
 				}
-			}
-			
-		});
-		
+				else if(${param.menu=='search'}){
+					if($($('input[name="proTranCode"]')[$(".ct_list_pop td:nth-child(3)").index(this)]).val()==''){
+						self.location = "/product/getProduct?prodNo="+$($('input:hidden[name="prodNo"]')[$(".ct_list_pop td:nth-child(3)").index(this)]).val()+"&menu=${param.menu}";
+						}else {
+					}
+				}
+				
+			});
+		 
 		$( "td.ct_condition:contains('배송하기')" ).on("click" , function() {
 			 self.location = "/purchase/updateTranCodeByProd?prodNo="+$($('input:hidden[name="prodNo"]')[$(".ct_list_pop td:nth-child(7)").index(this)]).val()+
 					 "&proTranCode="+$($('input:hidden[name="proTranCode"]')[$(".ct_list_pop td:nth-child(7)").index(this)]).val();
@@ -69,8 +70,93 @@ function fncGetList(currentPage) {
 					 +$($('input:hidden[name="proTranCode"]')[$(".ct_list_pop td:nth-child(7)").index(this)]).val();
 			 
 		});
-		 
-	});
+		
+		
+		$( ".ct_list_pop td:nth-child(1)" ).on("click" , function() {
+		 if(${param.menu=='search'}){
+						
+					var prodNo = $($('input:hidden[name="prodNo"]')[$(".ct_list_pop td:nth-child(1)").index(this)]).val();
+					$.ajax( 
+							{
+								url : "/product/json/getProduct/"+prodNo ,
+								method : "GET" ,
+								dataType : "json" ,
+								headers : {
+									"Accept" : "application/json",
+									"Content-Type" : "application/json"
+								},
+								success : function(JSONData , status) {
+
+									//Debug...
+									alert(status);
+									//Debug...
+									alert("JSONData : \n"+JSONData);
+									
+									var displayValue = "<h3>"
+																+"상품명 : "+JSONData.prodName+"<br/>"
+																+"이미지 : <img src=/images/uploadFiles/"+JSONData.fileName+"/><br/>"
+																+"제조일자  : "+JSONData.manuDate+"<br/>"
+																+"</h3>";
+									//Debug...									
+									//alert(displayValue);
+									$("h3").remove();
+									$( "#"+prodNo+"" ).html(displayValue);
+								}
+					});
+		 		}
+		 	});
+		
+		 $(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
+		
+			/*$( "td.ct_pre" ).hover(
+				  function() {
+				    $( this ).append(  "<img src=/images/uploadFiles/"+$($('input:hidden[name="fileName"]')[$(".ct_list_pop td:nth-child(9)").index(this)]).val()+"/><br/>" );
+				  }, function() {
+				    $( this ).find( "img" ).remove();
+				  }
+				);
+				 
+				$( "td.ct_pre.fade" ).hover(function() {
+				  $( this ).fadeOut( 100 );
+				  $( this ).fadeIn( 500 );
+				  
+			});  */
+			
+			
+		 $( ".ct_list_pop td:nth-child(9)" ).hover(function() {
+			var prodNo = $($('input:hidden[name="prodNo"]')[$(".ct_list_pop td:nth-child(9)").index(this)]).val();
+			var fileName = $($('input:hidden[name="fileName"]')[$(".ct_list_pop td:nth-child(9)").index(this)]).val();
+				  $.ajax( 
+						{
+							url : "/product/json/getProduct/"+prodNo ,
+							method : "GET" ,
+							dataType : "json" ,
+							headers : {
+								"Accept" : "application/json",
+								"Content-Type" : "application/json"
+							},
+							success : function(JSONData , status) {
+								var displayValue = "<h2><img src=/images/uploadFiles/"+JSONData.fileName+"/></h2>";
+							
+								$("h2").remove();
+								//alert(displayValue);
+								$("."+prodNo+"").html(displayValue);
+								//$( "#"+prodNo+"" ).html(displayValue);
+								//alert($(".ct_list_pop td:nth-child(9)").index(this));
+							}
+					});
+	
+		});	
+			
+		 $( ".ct_list_pop td:nth-child(9).fade" ).hover(function() {
+			  $( this ).fadeOut( 100 );
+			  $( this ).fadeIn( 500 );
+			  //$( this ).remove();
+			  
+		});
+			
+				
+});
 	 
 </script>
 </head>
@@ -221,13 +307,15 @@ function fncGetList(currentPage) {
 		</td>
 	</tr>
 	<tr>
-		<td class="ct_list_b" width="100">No</td>
+		<td class="ct_list_b" width="100">No(미리보기)</td>
 		<td class="ct_line02"></td>
 		<td class="ct_list_b" width="150">상품명</td>
 		<td class="ct_line02"></td>
 		<td class="ct_list_b" width="150">가격</td>
 		<td class="ct_line02"></td>
-		<td class="ct_list_b">현재상태</td>	
+		<td class="ct_list_b">현재상태</td>
+		<td class="ct_line02"></td>
+		<td class="ct_list_b">빠른보기</td>		
 	</tr>
 	<tr>
 		<td colspan="11" bgcolor="808285" height="1"></td>
@@ -262,12 +350,14 @@ function fncGetList(currentPage) {
 	<c:forEach var="product" items="${list}">	
 		<c:set var="i" value="${ i+1 }" />
 		<tr class="ct_list_pop">
-			<td align="center">${ i }</td>
+			<td align="center">
+			<input type="hidden" name="prodNo" value="${product.prodNo}">
+			<input type="hidden" name="proTranCode" value="${product.proTranCode}">
+			<input type="hidden" name="fileName" value="${product.fileName}">
+			<ins>${ i }</ins></td>
 			<td></td>
 				<c:if test = "${param.menu=='manage'}">					
 					<td align="left">
-					<input type="hidden" name="prodNo" value="${product.prodNo}">
-					<input type="hidden" name="proTranCode" value="${product.proTranCode}">
 					<!--<a href="/product/updateProduct?prodNo=${product.prodNo}&menu=${param.menu}">${product.prodName}</a>-->
 					<ins>${product.prodName}</ins>
 					</td>		
@@ -275,8 +365,8 @@ function fncGetList(currentPage) {
 				<c:if test = "${param.menu=='search'}">
 					<c:if test = "${product.proTranCode==null}">
 				<td align="left">
-				<input type="hidden" name="prodNo" value="${product.prodNo}">
-				<input type="hidden" name="proTranCode" value="${product.proTranCode}">
+				<!--<input type="hidden" name="prodNo" value="${product.prodNo}">-->
+				<!--<input type="hidden" name="proTranCode" value="${product.proTranCode}">-->
 				<!--<a href="/product/getProduct?prodNo=${product.prodNo}&menu=${param.menu}">${product.prodName}</a>-->
 				<ins>${product.prodName}</ins>
 				</td>
@@ -284,8 +374,8 @@ function fncGetList(currentPage) {
 				<c:if test = "${product.proTranCode=='0  '||product.proTranCode=='1  '||product.proTranCode=='2  '}">
 				<td align="left">
 				<font color="gray">${product.prodName}</font>
-				<input type="hidden" name="proTranCode" value="${product.proTranCode}">
-				<input type="hidden" name="prodNo" value="${product.prodNo}">
+				<!--<input type="hidden" name="proTranCode" value="${product.proTranCode}">-->
+				<!--<input type="hidden" name="prodNo" value="${product.prodNo}">-->
 				</td>
 				</c:if>
 				</c:if>
@@ -318,11 +408,17 @@ function fncGetList(currentPage) {
 			<c:if test = "${product.proTranCode=='2  '}">
 				배송완료
 			</c:if>
-			</td>		
+			</td>
+			<td></td>
+			<td align="left" class="${product.prodNo}">${product.fileName}</td>		
 		</tr>
 		<tr>
-		<td colspan="11" bgcolor="D6D7D6" height="1"></td>
+		<!--<td colspan="11" bgcolor="D6D7D6" height="1"></td>-->
+		
+		<td id="${product.prodNo}" colspan="11" bgcolor="D6D7D6" height="1"></td>
 		</tr>
+		</input>
+		</input>
 	</c:forEach>
 </table>
 

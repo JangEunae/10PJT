@@ -58,6 +58,8 @@ $(function() {
 		 +$($('input:hidden[name="tranCode"]')[$(".ct_list_pop td:nth-child(11)").index(this)]).val();
 	});
 	
+	$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
+	
 });
 
 

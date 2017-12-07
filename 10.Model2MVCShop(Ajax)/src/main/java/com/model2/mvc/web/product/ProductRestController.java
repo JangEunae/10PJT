@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
@@ -68,12 +69,50 @@ public class ProductRestController {
 	int pageSize;
 	
 	
+	@RequestMapping(value="json/addProduct", method=RequestMethod.POST)
+	public Product addProduct( @RequestBody Product product) throws Exception {
+		
+		System.out.println("json/product/addProduct : POST");
+		
+		//File f = new File("C:\\Users\\bitcamp\\git\\10PJT\\10.Model2MVCShop(Ajax)\\WebContent\\images\\uploadFiles\\"+multi.getOriginalFilename());
+		//multi.transferTo(f);
+		//product.setFileName(multi.getOriginalFilename());
+		
+		productService.addProduct(product);
+		
+		return product;
+	}
+	
 	@RequestMapping(value="json/getProduct/{prodNo}")
 	public Product getProduct( @PathVariable String prodNo) throws Exception {
 		
 		System.out.println("json/product/getProduct : GET / POST");
 		
 		return productService.getProduct(Integer.parseInt(prodNo));
+	}
+	
+	@RequestMapping(value="json/updateProduct/{prodNo}", method=RequestMethod.GET)
+	public Map updateProduct( @PathVariable String prodNo , Model model ) throws Exception{
+
+		System.out.println("json/product/updateProduct : GET");
+		//Business Logic
+		
+		Map<String , Object> map = new HashMap();
+		map.put("productVO", productService.getProduct(Integer.parseInt(prodNo)));
+		map.put("purchaseVO", purchaseService.getPurchase2(Integer.parseInt(prodNo)));
+		
+		return map;
+	}
+	
+	@RequestMapping(value="json/updateProduct", method=RequestMethod.POST)
+	public Product updateProduct( @RequestBody Product product, Model model ) throws Exception{
+
+		System.out.println("json/product/updateProduct : POST");
+		
+		//Business Logic
+		productService.updateProduct(product);
+		
+		return product;
 	}
 	
 	@RequestMapping(value="json/listProduct")

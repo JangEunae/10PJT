@@ -122,7 +122,7 @@ public class ProductController {
 			}*/
 		
 		
-		File f = new File("C:\\Users\\bitcamp\\git\\09PJT\\09.Model2MVCShop(jQuery)\\WebContent\\images\\uploadFiles\\"+multi.getOriginalFilename());
+		File f = new File("C:\\Users\\bitcamp\\git\\10PJT\\10.Model2MVCShop(Ajax)\\WebContent\\images\\uploadFiles\\"+multi.getOriginalFilename());
 		multi.transferTo(f);
 
 		product.setFileName(multi.getOriginalFilename());

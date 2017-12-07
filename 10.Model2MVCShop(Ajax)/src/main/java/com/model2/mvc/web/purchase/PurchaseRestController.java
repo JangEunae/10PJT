@@ -73,17 +73,12 @@ public class PurchaseRestController {
 		if(search.getCurrentPage() ==0 ){
 			search.setCurrentPage(1);
 		}
-		System.out.println("11111");
 		search.setPageSize(pageSize);
 		// Business logic ผ๖วเ
-		System.out.println("2222");
 		String buyerId=((User)session.getAttribute("user")).getUserId();
-		System.out.println("2.5");
 		Map<String , Object> map = purchaseService.getPurchaseList(search, buyerId);
-		System.out.println("33333");
 		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
 		System.out.println(resultPage);
-		System.out.println("44444");
 		map.put("resultPage", resultPage);
 		map.put("search", search);
 		
